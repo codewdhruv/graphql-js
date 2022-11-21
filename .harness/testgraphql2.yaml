@@ -31,8 +31,8 @@ pipeline:
                   name: Deepen cloned repo
                   identifier: Deepen_cloned_repo
                   spec:
-                    shell: Bash
-                    command: git fetch --depth=1 origin <+pipeline.variables.BASE_SHA>:refs/tags/BASE
+                    shell: Sh
+                    command: git fetch --depth=1 origin inputs.pull_request_json:refs/tags/BASE
               - step:
                   type: Run
                   name: Install Dependencies
