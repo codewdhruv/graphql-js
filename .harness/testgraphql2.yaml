@@ -1,0 +1,56 @@
+pipeline:
+  name: test-graphql-2
+  identifier: testgraphql2
+  projectIdentifier: DhrubaCI
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: dhrubaaccountconnector
+        repoName: graphql-js
+        build: <+input>
+  stages:
+    - stage:
+        name: run-benchmark
+        identifier: runbenchmark
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Deepen cloned repo
+                  identifier: Deepen_cloned_repo
+                  spec:
+                    shell: Sh
+                    command: git fetch --depth=1 origin "<+pipeline.variables.BASE_SHA>:refs/tags/BASE"
+              - step:
+                  type: Run
+                  name: Install Dependencies
+                  identifier: Install_Dependencies
+                  spec:
+                    shell: Sh
+                    command: |
+                      npm ci --ignore-scripts
+              - step:
+                  type: Run
+                  name: Run Benchmark
+                  identifier: Run_Benchmark
+                  spec:
+                    shell: Sh
+                    command: |
+                      npm run benchmark -- --revs HEAD BASE
+  variables:
+    - name: BASE_SHA
+      type: String
+      description: ""
+      value: ${{ fromJSON(inputs.pull_request_json).base.sha }}
