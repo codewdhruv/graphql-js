@@ -33,3 +33,19 @@ pipeline:
                   spec:
                     shell: Sh
                     command: npm ci --ignore-scripts
+              - step:
+                  type: Run
+                  name: Lint Install and Tests
+                  identifier: Lint_Install_and_Tests
+                  spec:
+                    shell: Sh
+                    command: npm run <+matrix.deps>
+                  failureStrategies: []
+                  strategy:
+                    matrix:
+                      deps:
+                        - lint
+                        - check
+                        - prettier:check
+                        - check:spelling
+                      maxConcurrency: 1
