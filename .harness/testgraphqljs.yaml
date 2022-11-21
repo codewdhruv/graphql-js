@@ -155,6 +155,41 @@ pipeline:
                         shell: Sh
                         command: |
                           npm run fuzzonly
+        - stage:
+            name: mutation test
+            identifier: mutation_test
+            description: ""
+            type: CI
+            spec:
+              cloneCodebase: true
+              platform:
+                os: Linux
+                arch: Amd64
+              runtime:
+                type: Cloud
+                spec: {}
+              execution:
+                steps:
+                  - step:
+                      type: Run
+                      name: Install Dependencies
+                      identifier: Install_Dependencies
+                      spec:
+                        shell: Sh
+                        command: npm ci --ignore-scripts
+                  - step:
+                      type: Run
+                      name: Run mutation testing
+                      identifier: Run_mutation_testing
+                      spec:
+                        shell: Sh
+                        command: |
+                          npm run testonly:mutate
+                        reports:
+                          type: JUnit
+                          spec:
+                            paths:
+                              - ./reports/mutation/mutation.html
     - stage:
         name: test node
         identifier: test_node
