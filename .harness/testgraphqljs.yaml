@@ -94,3 +94,33 @@ pipeline:
                     shell: Sh
                     command: |
                       git diff --exit-code package-lock.json
+    - stage:
+        name: integration test
+        identifier: integration_test
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Install Dependencies
+                  identifier: Install_Dependencies
+                  spec:
+                    shell: Sh
+                    command: |
+                      npm ci --ignore-scripts
+              - step:
+                  type: Run
+                  name: Run Integration Tests
+                  identifier: Run_Integration_Tests
+                  spec:
+                    shell: Sh
+                    command: npm run check:integrations
