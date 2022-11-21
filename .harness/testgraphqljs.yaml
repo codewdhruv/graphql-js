@@ -49,7 +49,7 @@ pipeline:
                         - check:spelling
                       maxConcurrency: 1
     - stage:
-        name: Check for commonly ignored files
+        name: Checks
         identifier: Check_for_commonly_ignored_files
         description: ""
         type: CI
