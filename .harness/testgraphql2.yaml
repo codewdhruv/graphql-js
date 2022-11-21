@@ -31,7 +31,7 @@ pipeline:
                   name: Deepen cloned repo
                   identifier: Deepen_cloned_repo
                   spec:
-                    shell: Sh
+                    shell: Bash
                     command: git fetch --depth=1 origin <+pipeline.variables.BASE_SHA>:refs/tags/BASE
               - step:
                   type: Run
