@@ -49,8 +49,8 @@ pipeline:
                         - check:spelling
                       maxConcurrency: 1
     - stage:
-        name: Checks
-        identifier: Checks
+        name: checks
+        identifier: checks
         description: ""
         type: CI
         spec:
@@ -185,7 +185,7 @@ pipeline:
                     command: npm run testonly:cover
     - parallel:
         - stage:
-            name: Build artifact
+            name: build artifact
             identifier: build_artifact
             description: ""
             type: CI
@@ -224,8 +224,8 @@ pipeline:
                         command: |
                           npm run build:deno
         - stage:
-            name: Build website
-            identifier: Build_website
+            name: build website
+            identifier: build_website
             description: ""
             type: CI
             spec:
