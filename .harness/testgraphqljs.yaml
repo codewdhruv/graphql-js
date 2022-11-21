@@ -183,42 +183,72 @@ pipeline:
                   spec:
                     shell: Sh
                     command: npm run testonly:cover
-    - stage:
-        name: Build artifact
-        identifier: build_artifact
-        description: ""
-        type: CI
-        spec:
-          cloneCodebase: true
-          platform:
-            os: Linux
-            arch: Amd64
-          runtime:
-            type: Cloud
-            spec: {}
-          execution:
-            steps:
-              - step:
-                  type: Run
-                  name: Install Dependencies
-                  identifier: Install_Dependencies
-                  spec:
-                    shell: Sh
-                    command: |
-                      npm ci --ignore-scripts
-              - step:
-                  type: Run
-                  name: Build NPM package
-                  identifier: Build_NPM_package
-                  spec:
-                    shell: Sh
-                    command: |
-                      npm run build:npm
-              - step:
-                  type: Run
-                  name: Build Deno package
-                  identifier: Build_Deno_package
-                  spec:
-                    shell: Sh
-                    command: |
-                      npm run build:deno
+    - parallel:
+        - stage:
+            name: Build artifact
+            identifier: build_artifact
+            description: ""
+            type: CI
+            spec:
+              cloneCodebase: true
+              platform:
+                os: Linux
+                arch: Amd64
+              runtime:
+                type: Cloud
+                spec: {}
+              execution:
+                steps:
+                  - step:
+                      type: Run
+                      name: Install Dependencies
+                      identifier: Install_Dependencies
+                      spec:
+                        shell: Sh
+                        command: |
+                          npm ci --ignore-scripts
+                  - step:
+                      type: Run
+                      name: Build NPM package
+                      identifier: Build_NPM_package
+                      spec:
+                        shell: Sh
+                        command: |
+                          npm run build:npm
+                  - step:
+                      type: Run
+                      name: Build Deno package
+                      identifier: Build_Deno_package
+                      spec:
+                        shell: Sh
+                        command: |
+                          npm run build:deno
+        - stage:
+            name: Build website
+            identifier: Build_website
+            description: ""
+            type: CI
+            spec:
+              cloneCodebase: true
+              platform:
+                os: Linux
+                arch: Amd64
+              runtime:
+                type: Cloud
+                spec: {}
+              execution:
+                steps:
+                  - step:
+                      type: Run
+                      name: Install Dependencies
+                      identifier: Install_Dependencies
+                      spec:
+                        shell: Sh
+                        command: npm ci --ignore-scripts
+                  - step:
+                      type: Run
+                      name: Build Docs
+                      identifier: Build_Docs
+                      spec:
+                        shell: Sh
+                        command: npm run build:website
