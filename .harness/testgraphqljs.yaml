@@ -1,0 +1,35 @@
+pipeline:
+  name: test-graphql-js
+  identifier: testgraphqljs
+  projectIdentifier: DhrubaCI
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: dhrubaaccountconnector
+        repoName: graphql-js
+        build: <+input>
+  stages:
+    - stage:
+        name: ci
+        identifier: ci
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Install Dependencies
+                  identifier: Install_Dependencies
+                  spec:
+                    shell: Sh
+                    command: npm ci --ignore-scripts
