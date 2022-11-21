@@ -50,7 +50,7 @@ pipeline:
                       maxConcurrency: 1
     - stage:
         name: Checks
-        identifier: Check_for_commonly_ignored_files
+        identifier: Checks
         description: ""
         type: CI
         spec:
@@ -154,3 +154,71 @@ pipeline:
                     shell: Sh
                     command: |
                       npm run fuzzonly
+    - stage:
+        name: test node
+        identifier: test_node
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Install Dependencies
+                  identifier: Install_Dependencies
+                  spec:
+                    shell: Sh
+                    command: npm ci --ignore-scripts
+              - step:
+                  type: Run
+                  name: Run Tests with coverage
+                  identifier: Run_Tests_with_coverage
+                  spec:
+                    shell: Sh
+                    command: npm run testonly:cover
+    - stage:
+        name: Build artifact
+        identifier: build_artifact
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Install Dependencies
+                  identifier: Install_Dependencies
+                  spec:
+                    shell: Sh
+                    command: |
+                      npm ci --ignore-scripts
+              - step:
+                  type: Run
+                  name: Build NPM package
+                  identifier: Build_NPM_package
+                  spec:
+                    shell: Sh
+                    command: |
+                      npm run build:npm
+              - step:
+                  type: Run
+                  name: Build Deno package
+                  identifier: Build_Deno_package
+                  spec:
+                    shell: Sh
+                    command: |
+                      npm run build:deno
