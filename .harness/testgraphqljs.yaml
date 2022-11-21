@@ -46,7 +46,6 @@ pipeline:
                       deps:
                         - lint
                         - check
-                        - prettier:check
                         - check:spelling
                       maxConcurrency: 1
     - stage:
