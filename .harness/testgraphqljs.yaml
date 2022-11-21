@@ -86,3 +86,11 @@ pipeline:
                   spec:
                     shell: Sh
                     command: npm install --ignore-scripts --force --package-lock-only --engine-strict --strict-peer-deps
+              - step:
+                  type: Run
+                  name: package_lock sync with package
+                  identifier: package_lock_sync_with_package
+                  spec:
+                    shell: Sh
+                    command: |
+                      git diff --exit-code package-lock.json
