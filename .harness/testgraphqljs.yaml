@@ -49,3 +49,34 @@ pipeline:
                         - prettier:check
                         - check:spelling
                       maxConcurrency: 1
+    - stage:
+        name: Check for commonly ignored files
+        identifier: Check_for_commonly_ignored_files
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Check if commit contains files that should be ignored
+                  identifier: Check_if_commit_contains_files_that_should_be_ignored
+                  spec:
+                    shell: Sh
+                    command: |-
+                      git clone --depth 1 https://github.com/github/gitignore.git
+                                rm gitignore/Global/ModelSim.gitignore
+                                rm gitignore/Global/Images.gitignore
+                                cat gitignore/Node.gitignore gitignore/Global/*.gitignore > all.gitignore
+                                IGNORED_FILES=$(git ls-files --cached --ignored --exclude-from=all.gitignore)
+                                if  [[ "$IGNORED_FILES" != "" ]]; then
+                                  echo -e "::error::Please remove these files:\n$IGNORED_FILES" | sed -z 's/\n/%0A/g'
+                                  exit 1
+                                fi
