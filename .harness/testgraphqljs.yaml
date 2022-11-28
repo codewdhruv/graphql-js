@@ -190,14 +190,23 @@ pipeline:
                           spec:
                             paths:
                               - ./reports/mutation/mutation.html
-                  - step:
-                      type: GCSUpload
-                      name: upload test results
-                      identifier: upload_test_results
-                      spec:
-                        connectorRef: gcpconnector
-                        bucket: graphql-js
-                        sourcePath: /harness/reports/mutation/mutation.html
+                  - parallel:
+                      - step:
+                          type: GCSUpload
+                          name: upload test results
+                          identifier: upload_test_results
+                          spec:
+                            connectorRef: gcpconnector
+                            bucket: graphql-js
+                            sourcePath: /harness/reports/mutation/mutation.html
+                      - step:
+                          type: GCSUpload
+                          name: upload test results test
+                          identifier: upload_test_results_test
+                          spec:
+                            connectorRef: gcpconnector
+                            bucket: graphql-js
+                            sourcePath: reports/
     - stage:
         name: test node
         identifier: test_node
