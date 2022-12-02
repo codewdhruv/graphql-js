@@ -302,9 +302,23 @@ pipeline:
         description: ""
         type: CI
         spec:
-          cloneCodebase: true
+          cloneCodebase: false
           execution:
             steps:
+              - step:
+                  type: Run
+                  name: Install Dependencies
+                  identifier: Install_Dependencies
+                  spec:
+                    shell: Sh
+                    command: npm ci --ignore-scripts
+              - step:
+                  type: Run
+                  name: Build NPM package
+                  identifier: Build_NPM_package
+                  spec:
+                    shell: Sh
+                    command: npm run build:npm
               - step:
                   identifier: publish
                   type: Run
