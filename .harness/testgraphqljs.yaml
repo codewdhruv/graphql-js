@@ -319,14 +319,6 @@ pipeline:
                   spec:
                     shell: Sh
                     command: npm run build:npm
-          serviceDependencies:
-            - identifier: yarn
-              type: Service
-              name: yarn
-              spec:
-                connectorRef: account.harnessImage
-                image: yarnpkg/dev:latest
-                imagePullPolicy: IfNotPresent
           platform:
             os: Linux
             arch: Amd64
