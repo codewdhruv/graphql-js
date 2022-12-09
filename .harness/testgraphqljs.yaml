@@ -296,3 +296,4 @@ pipeline:
                       spec:
                         shell: Sh
                         command: npm run build:website
+  allowStageExecutions: true
