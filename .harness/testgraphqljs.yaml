@@ -276,6 +276,7 @@ pipeline:
                         settings:
                           cache: npm
                           registryurl: https://registry.npmjs.org
+                          uses: actions/setup-node@v3
               sharedPaths:
                 - /npmDist
         - stage:
