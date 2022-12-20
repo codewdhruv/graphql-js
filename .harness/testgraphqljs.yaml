@@ -231,7 +231,6 @@ pipeline:
         - stage:
             name: build artifact
             identifier: build_artifact
-            description: ""
             type: CI
             spec:
               cloneCodebase: true
@@ -267,6 +266,8 @@ pipeline:
                         shell: Sh
                         command: |
                           npm run build:deno
+              sharedPaths:
+                - ./npmDist
         - stage:
             name: build website
             identifier: build_website
