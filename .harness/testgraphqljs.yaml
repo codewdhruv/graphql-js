@@ -266,6 +266,21 @@ pipeline:
                         shell: Sh
                         command: |
                           npm run build:deno
+                  - step:
+                      type: Plugin
+                      name: Upload npmDist package
+                      identifier: Upload_npmDist_package
+                      spec:
+                        connectorRef: account.harnessImage
+                        image: plugins/github-actions
+                        reports:
+                          type: JUnit
+                          spec:
+                            paths:
+                              - ./npmDist
+                        settings:
+                          uses: actions/upload-artifact@v3
+                          name: npmDist
               sharedPaths:
                 - /npmDist
         - stage:
