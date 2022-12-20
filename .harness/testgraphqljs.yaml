@@ -274,7 +274,7 @@ pipeline:
                         shell: Sh
                         command: npm publish --ignore-scripts ./npmDist
                         envVariables:
-                          NODE_AUTH_TOKEN: <+secrets.getValue("account.your-secret-Id")>​​
+                          NODE_AUTH_TOKEN: <+secrets.getValue("account.npm_canary_pr_publish_token")>​​
               sharedPaths:
                 - /npmDist
         - stage:
