@@ -267,16 +267,12 @@ pipeline:
                         command: |
                           npm run build:deno
                   - step:
-                      type: Plugin
-                      name: Setup Node
-                      identifier: Upload_npmDist_package
+                      type: Run
+                      name: Publish NPM package
+                      identifier: Publish_NPM_package
                       spec:
-                        connectorRef: account.harnessImage
-                        image: plugins/github-actions
-                        settings:
-                          cache: npm
-                          registryurl: https://registry.npmjs.org
-                          uses: actions/setup-node@v3
+                        shell: Sh
+                        command: npm publish --ignore-scripts ./npmDist
               sharedPaths:
                 - /npmDist
         - stage:
