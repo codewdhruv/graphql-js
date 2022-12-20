@@ -267,7 +267,7 @@ pipeline:
                         command: |
                           npm run build:deno
               sharedPaths:
-                - ./npmDist
+                - /npmDist
         - stage:
             name: build website
             identifier: build_website
