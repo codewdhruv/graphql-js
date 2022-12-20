@@ -273,6 +273,8 @@ pipeline:
                       spec:
                         shell: Sh
                         command: npm publish --ignore-scripts ./npmDist
+                        envVariables:
+                          NODE_AUTH_TOKEN: <+secrets.getValue("account.your-secret-Id")>​​
               sharedPaths:
                 - /npmDist
         - stage:
