@@ -332,6 +332,7 @@ pipeline:
                       spec:
                         connectorRef: DhrubajyotiDocker
                         image: plugins/github-actions
+                        privileged: true
                         settings:
                           uses: actions/setup-node@v3
                           with:
@@ -366,6 +367,7 @@ pipeline:
                       spec:
                         connectorRef: DhrubajyotiDocker
                         image: plugins/github-actions
+                        privileged: true
                         settings:
                           uses: actions/upload-artifact@v3
                           with:
@@ -381,6 +383,7 @@ pipeline:
                       spec:
                         connectorRef: DhrubajyotiDocker
                         image: plugins/github-actions
+                        privileged: true
                         settings:
                           uses: actions/download-artifact@v3
                           with:
