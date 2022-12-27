@@ -364,4 +364,13 @@ pipeline:
                           with:
                             name: npmDist
                             path: npmDist
+                  - step:
+                      type: Run
+                      name: Publish NPM package
+                      identifier: Publish_NPM_package
+                      spec:
+                        shell: Sh
+                        command: npm publish --ignore-scripts ./npmDist
+                        envVariables:
+                          NODE_AUTH_TOKEN: <+secre
   allowStageExecutions: true
