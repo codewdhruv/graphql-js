@@ -266,16 +266,6 @@ pipeline:
                         shell: Sh
                         command: |
                           npm run build:deno
-                  - step:
-                      type: Run
-                      name: Publish NPM package
-                      identifier: Publish_NPM_package
-                      spec:
-                        shell: Sh
-                        command: npm publish --ignore-scripts ./npmDist
-                        envVariables:
-                          NODE_AUTH_TOKEN: <+secrets.getValue("account.npm_canary_pr_publish_token")>​​
-                          registryurl: https://registry.npmjs.org
               sharedPaths:
                 - /npmDist
         - stage:
@@ -307,4 +297,31 @@ pipeline:
                       spec:
                         shell: Sh
                         command: npm run build:website
+        - stage:
+            name: publish on npm
+            identifier: publish_on_npm
+            description: ""
+            type: CI
+            spec:
+              cloneCodebase: true
+              platform:
+                os: Linux
+                arch: Amd64
+              runtime:
+                type: Cloud
+                spec: {}
+              execution:
+                steps:
+                  - step:
+                      type: Plugin
+                      name: Setup Nodejs
+                      identifier: Setup_Nodejs
+                      spec:
+                        connectorRef: DhrubajyotiDocker
+                        image: plugins/github-actions
+                        settings:
+                          uses: actions/setup-node@v3
+                          with:
+                            cache: npm
+                            node-version-file: .node-version
   allowStageExecutions: true
