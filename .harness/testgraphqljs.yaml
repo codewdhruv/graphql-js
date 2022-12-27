@@ -324,4 +324,31 @@ pipeline:
                           with:
                             cache: npm
                             node-version-file: .node-version
+                  - step:
+                      type: Run
+                      name: Install Dependencies
+                      identifier: Install_Dependencies
+                      spec:
+                        shell: Sh
+                        command: npm ci --ignore-scripts
+                  - step:
+                      type: Run
+                      name: Build NPM package
+                      identifier: Build_NPM_package
+                      spec:
+                        shell: Sh
+                        command: |
+                          npm run build:npm
+                  - step:
+                      type: Plugin
+                      name: Upload npmDist package
+                      identifier: Upload_npmDist_package
+                      spec:
+                        connectorRef: DhrubajyotiDocker
+                        image: plugins/github-actions
+                        settings:
+                          uses: actions/upload-artifact@v3
+                          with:
+                            name: npmDist
+                            path: ./npmDist
   allowStageExecutions: true
