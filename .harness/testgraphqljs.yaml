@@ -352,4 +352,16 @@ pipeline:
                           with:
                             name: npmDist
                             path: ./npmDist
+                  - step:
+                      type: Plugin
+                      name: download artifact
+                      identifier: download_artifact
+                      spec:
+                        connectorRef: DhrubajyotiDocker
+                        image: plugins/github-actions
+                        settings:
+                          uses: actions/download-artifact@v3
+                          with:
+                            name: npmDist
+                            path: npmDist
   allowStageExecutions: true
