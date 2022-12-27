@@ -335,10 +335,7 @@ pipeline:
                         privileged: true
                         settings:
                           uses: actions/setup-node@v3
-                          with:
-                            cache: npm
-                            node-version-file: .node-version
-                            registry-url: https://registry.npmjs.org
+                          with: "cache: npm"
                   - step:
                       type: Run
                       name: Install Dependencies
