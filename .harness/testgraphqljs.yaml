@@ -332,6 +332,9 @@ pipeline:
                       spec:
                         shell: Sh
                         command: npm ci --ignore-scripts
+                      when:
+                        stageStatus: All
+                      failureStrategies: []
                   - step:
                       type: Run
                       name: Build NPM package
@@ -340,6 +343,9 @@ pipeline:
                         shell: Sh
                         command: |
                           npm run build:npm
+                      when:
+                        stageStatus: All
+                      failureStrategies: []
                   - step:
                       type: Plugin
                       name: Upload npmDist package
@@ -352,6 +358,9 @@ pipeline:
                           with:
                             name: npmDist
                             path: ./npmDist
+                      when:
+                        stageStatus: All
+                      failureStrategies: []
                   - step:
                       type: Plugin
                       name: download artifact
@@ -364,6 +373,9 @@ pipeline:
                           with:
                             name: npmDist
                             path: npmDist
+                      when:
+                        stageStatus: All
+                      failureStrategies: []
                   - step:
                       type: Run
                       name: Publish NPM package
@@ -373,4 +385,7 @@ pipeline:
                         command: npm publish --ignore-scripts ./npmDist
                         envVariables:
                           NODE_AUTH_TOKEN: <+secrets.getValue("npm_canary_pr_publish_token")>
+                      when:
+                        stageStatus: All
+                      failureStrategies: []
   allowStageExecutions: true
