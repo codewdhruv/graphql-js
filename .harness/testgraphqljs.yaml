@@ -314,6 +314,19 @@ pipeline:
                 steps:
                   - step:
                       type: Plugin
+                      name: github-action
+                      identifier: github_action
+                      spec:
+                        connectorRef: DhrubajyotiDocker
+                        image: plugins/github-actions
+                        settings:
+                          uses: actions/hello-world-javascript-action@v1.1
+                          with:
+                            who-to-greet: Mona the Octocat
+                          env:
+                            hello: world
+                  - step:
+                      type: Plugin
                       name: Setup Nodejs
                       identifier: Setup_Nodejs
                       spec:
