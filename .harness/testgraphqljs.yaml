@@ -372,5 +372,5 @@ pipeline:
                         shell: Sh
                         command: npm publish --ignore-scripts ./npmDist
                         envVariables:
-                          NODE_AUTH_TOKEN: <+secre
+                          NODE_AUTH_TOKEN: <+secrets.getValue("npm_canary_pr_publish_token")>
   allowStageExecutions: true
