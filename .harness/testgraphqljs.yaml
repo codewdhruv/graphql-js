@@ -324,6 +324,7 @@ pipeline:
                           with:
                             cache: npm
                             node-version-file: .node-version
+                            registry-url: https://registry.npmjs.org
                   - step:
                       type: Run
                       name: Install Dependencies
