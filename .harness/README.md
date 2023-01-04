@@ -316,13 +316,14 @@ This is a fork of GraphQL JS project. This project is used for testing Harness C
                         command: npm run build:website
   allowStageExecutions: true
 ```
+> Make sure you modify the connectors with the connectors you create. 
 
-6. Create a Pull Request in a new branch by updating the build.gradlefile. (e.g. add a comment or new line). This should trigger a build in Harness CI
+6. Create a Pull Request in a new branch by updating the project. (e.g. add a comment or new line). This should invoke a build in Harness CI
 
-7. Merge the PR after the pipeline runs successfully.
+7. Merge the PR after the pipeline execution is successfull.
 
 8. Enable GitHub Actions : The repository forked in Step 2 already has a GitHub Actions workflow file added. You can choose to enable this workflow from the Actions tab on GitHub.
 
 9. Create any other Pull Request with a few source or test file changes. You can consider cherry-picking any of the commits from the main repository.
 
-10. This PR will trigger the Harness CI pipeline (as well as GitHub Actions workflow if enabled in Step-9). Here we are implementing multiple workflows for Github Actions.
+10. This PR will trigger the Harness CI pipeline (as well as GitHub Actions workflow if enabled in Step-9). Here we are implementing multiple workflows for Github Actions. (CI + Mutation)
