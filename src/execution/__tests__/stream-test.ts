@@ -402,6 +402,54 @@ describe('Execute: stream directive', () => {
       },
     ]);
   });
+  it('Can stream a field that returns a list with nested promises', async () => {
+    const document = parse(`
+      query { 
+        friendList @stream(initialCount: 2) {
+          name
+          id
+        }
+      }
+    `);
+    const result = await complete(document, {
+      friendList: () =>
+        friends.map((f) => ({
+          name: Promise.resolve(f.name),
+          id: Promise.resolve(f.id),
+        })),
+    });
+    expectJSON(result).toDeepEqual([
+      {
+        data: {
+          friendList: [
+            {
+              name: 'Luke',
+              id: '1',
+            },
+            {
+              name: 'Han',
+              id: '2',
+            },
+          ],
+        },
+        hasNext: true,
+      },
+      {
+        incremental: [
+          {
+            items: [
+              {
+                name: 'Leia',
+                id: '3',
+              },
+            ],
+            path: ['friendList', 2],
+          },
+        ],
+        hasNext: false,
+      },
+    ]);
+  });
   it('Handles rejections in a field that returns a list of promises before initialCount is reached', async () => {
     const document = parse(`
       query { 
@@ -901,6 +949,55 @@ describe('Execute: stream directive', () => {
       },
     ]);
   });
+  it('Handles nested async errors thrown by completeValue after initialCount is reached', async () => {
+    const document = parse(`
+      query { 
+        friendList @stream(initialCount: 1) {
+          nonNullName
+        }
+      }
+    `);
+    const result = await complete(document, {
+      friendList: () => [
+        { nonNullName: Promise.resolve(friends[0].name) },
+        { nonNullName: Promise.reject(new Error('Oops')) },
+        { nonNullName: Promise.resolve(friends[1].name) },
+      ],
+    });
+    expectJSON(result).toDeepEqual([
+      {
+        data: {
+          friendList: [{ nonNullName: 'Luke' }],
+        },
+        hasNext: true,
+      },
+      {
+        incremental: [
+          {
+            items: [null],
+            path: ['friendList', 1],
+            errors: [
+              {
+                message: 'Oops',
+                locations: [{ line: 4, column: 11 }],
+                path: ['friendList', 1, 'nonNullName'],
+              },
+            ],
+          },
+        ],
+        hasNext: true,
+      },
+      {
+        incremental: [
+          {
+            items: [{ nonNullName: 'Han' }],
+            path: ['friendList', 2],
+          },
+        ],
+        hasNext: false,
+      },
+    ]);
+  });
   it('Handles async errors thrown by completeValue after initialCount is reached for a non-nullable list', async () => {
     const document = parse(`
       query { 
@@ -916,6 +1013,46 @@ describe('Execute: stream directive', () => {
           nonNullName: () => Promise.reject(new Error('Oops')),
         }),
         Promise.resolve({ nonNullName: friends[1].name }),
+      ],
+    });
+    expectJSON(result).toDeepEqual([
+      {
+        data: {
+          nonNullFriendList: [{ nonNullName: 'Luke' }],
+        },
+        hasNext: true,
+      },
+      {
+        incremental: [
+          {
+            items: null,
+            path: ['nonNullFriendList', 1],
+            errors: [
+              {
+                message: 'Oops',
+                locations: [{ line: 4, column: 11 }],
+                path: ['nonNullFriendList', 1, 'nonNullName'],
+              },
+            ],
+          },
+        ],
+        hasNext: false,
+      },
+    ]);
+  });
+  it('Handles nested async errors thrown by completeValue after initialCount is reached for a non-nullable list', async () => {
+    const document = parse(`
+      query { 
+        nonNullFriendList @stream(initialCount: 1) {
+          nonNullName
+        }
+      }
+    `);
+    const result = await complete(document, {
+      nonNullFriendList: () => [
+        { nonNullName: Promise.resolve(friends[0].name) },
+        { nonNullName: Promise.reject(new Error('Oops')) },
+        { nonNullName: Promise.resolve(friends[1].name) },
       ],
     });
     expectJSON(result).toDeepEqual([
@@ -1037,6 +1174,9 @@ describe('Execute: stream directive', () => {
             ],
           },
         ],
+        hasNext: true,
+      },
+      {
         hasNext: false,
       },
     ]);
@@ -1060,19 +1200,25 @@ describe('Execute: stream directive', () => {
         } /* c8 ignore stop */,
       },
     });
-    expectJSON(result).toDeepEqual({
-      errors: [
-        {
-          message:
-            'Cannot return null for non-nullable field NestedObject.nonNullScalarField.',
-          locations: [{ line: 4, column: 11 }],
-          path: ['nestedObject', 'nonNullScalarField'],
+    expectJSON(result).toDeepEqual([
+      {
+        errors: [
+          {
+            message:
+              'Cannot return null for non-nullable field NestedObject.nonNullScalarField.',
+            locations: [{ line: 4, column: 11 }],
+            path: ['nestedObject', 'nonNullScalarField'],
+          },
+        ],
+        data: {
+          nestedObject: null,
         },
-      ],
-      data: {
-        nestedObject: null,
+        hasNext: true,
       },
-    });
+      {
+        hasNext: false,
+      },
+    ]);
   });
   it('Filters payloads that are nulled by a later synchronous error', async () => {
     const document = parse(`
@@ -1213,6 +1359,9 @@ describe('Execute: stream directive', () => {
             ],
           },
         ],
+        hasNext: true,
+      },
+      {
         hasNext: false,
       },
     ]);
